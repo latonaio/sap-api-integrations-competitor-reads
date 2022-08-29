@@ -31,6 +31,7 @@ sap-api-integrations-competitor-reads において、API への値入力条件�
 
 ### SDC レイアウト
 
+* inoutSDC.CompetitorCollection.ObjectID（対象ID）  
 * inoutSDC.CompetitorCollection.CompetitorID（競合ID）  
 
 
@@ -68,19 +69,14 @@ accepter における データ種別 の指定に基づいて SAP_API_Caller �
 caller.go の func() 毎 の 以下の箇所が、指定された API をコールするソースコードです。  
 
 ```
-func (c *SAPAPICaller) AsyncGetCompetitor(competitorID, salesOrganisationID string, accepter []string) {
+func (c *SAPAPICaller) AsyncGetCompetitor(objectID, competitorID string, accepter []string) {
 	wg := &sync.WaitGroup{}
 	wg.Add(len(accepter))
 	for _, fn := range accepter {
 		switch fn {
 		case "CompetitorCollection":
 			func() {
-				c.CompetitorCollection(competitorID)
-				wg.Done()
-			}()
-		case "SalesOrganisationCollection":
-			func() {
-				c.SalesOrganisationCollection(salesOrganisationID)
+				c.CompetitorCollection(objectID, competitorID)
 				wg.Done()
 			}()
 		default:

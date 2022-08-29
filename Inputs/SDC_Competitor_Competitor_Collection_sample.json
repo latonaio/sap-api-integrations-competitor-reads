@@ -4,7 +4,7 @@
 	"redis_key": "abcdefg",
 	"filepath": "/var/lib/aion/Data/rededge_sdc/abcdef.json",
 	"CompetitorCollection": {
-		"ObjectID":"",                          
+		"ObjectID":"00163E03A0701EE288BA0BC721A2B04A",                          
         "CompetitorID":"1000000",                      
         "CompetitorUUID":"",                    
         "StatusCode":"",                        
@@ -59,14 +59,7 @@
         "ChangedBy":"",                         
         "ChangedByIdentityUUID":"",             
         "EntityLastChangedOn":"",               
-        "ETag":"" ,
-        "SalesOrganizationCollection": {
-            "ObjectID":"",            
-            "ParentObjectID":"",      
-            "SalesOrganisationID":"", 
-            "CompetitorID":"",        
-            "ETag":""                
-        }                             
+        "ETag":""                  
 	},
 	"api_schema": "Competitor",
 	"accepter": ["CompetitorCollection"],

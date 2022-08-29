@@ -26,14 +26,14 @@ func NewSAPAPICaller(baseUrl string, l *logger.Logger) *SAPAPICaller {
 	}
 }
 
-func (c *SAPAPICaller) AsyncGetCompetitor(competitorID string, accepter []string) {
+func (c *SAPAPICaller) AsyncGetCompetitor(objectID, competitorID string, accepter []string) {
 	wg := &sync.WaitGroup{}
 	wg.Add(len(accepter))
 	for _, fn := range accepter {
 		switch fn {
 		case "CompetitorCollection":
 			func() {
-				c.CompetitorCollection(competitorID)
+				c.CompetitorCollection(objectID, competitorID)
 				wg.Done()
 			}()
 		default:
@@ -44,8 +44,8 @@ func (c *SAPAPICaller) AsyncGetCompetitor(competitorID string, accepter []string
 	wg.Wait()
 }
 
-func (c *SAPAPICaller) CompetitorCollection(competitorID string) {
-	competitorCollectionData, err := c.callCompetitorSrvAPIRequirementCompetitorCollection("CompetitorCollection", competitorID)
+func (c *SAPAPICaller) CompetitorCollection(objectID, competitorID string) {
+	competitorCollectionData, err := c.callCompetitorSrvAPIRequirementCompetitorCollection("CompetitorCollection", objectID, competitorID)
 	if err != nil {
 		c.log.Error(err)
 		return
@@ -53,12 +53,12 @@ func (c *SAPAPICaller) CompetitorCollection(competitorID string) {
 	c.log.Info(competitorCollectionData)
 }
 
-func (c *SAPAPICaller) callCompetitorSrvAPIRequirementCompetitorCollection(api, competitorID string) ([]sap_api_output_formatter.CompetitorCollection, error) {
+func (c *SAPAPICaller) callCompetitorSrvAPIRequirementCompetitorCollection(api, objectID, competitorID string) ([]sap_api_output_formatter.CompetitorCollection, error) {
 	url := strings.Join([]string{c.baseURL, "c4codataapi", api}, "/")
 	req, _ := http.NewRequest("GET", url, nil)
 
 	c.setHeaderAPIKeyAccept(req)
-	c.getQueryWithCompetitorCollection(req, competitorID)
+	c.getQueryWithCompetitorCollection(req, objectID, competitorID)
 
 	resp, err := new(http.Client).Do(req)
 	if err != nil {
@@ -79,8 +79,8 @@ func (c *SAPAPICaller) setHeaderAPIKeyAccept(req *http.Request) {
 	req.Header.Set("Accept", "application/json")
 }
 
-func (c *SAPAPICaller) getQueryWithCompetitorCollection(req *http.Request, competitorID string) {
+func (c *SAPAPICaller) getQueryWithCompetitorCollection(req *http.Request, objectID, competitorID string) {
 	params := req.URL.Query()
-	params.Add("$filter", fmt.Sprintf("CompetitorID eq '%s'", competitorID))
+	params.Add("$filter", fmt.Sprintf("ObjectID eq '%s' and CompetitorID eq '%s'", objectID, competitorID))
 	req.URL.RawQuery = params.Encode()
 }

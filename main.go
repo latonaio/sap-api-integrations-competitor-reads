@@ -23,6 +23,7 @@ func main() {
 	}
 
 	caller.AsyncGetCompetitor(
+		inoutSDC.CompetitorCollection.ObjectID,
 		inoutSDC.CompetitorCollection.CompetitorID,
 		accepter,
 	)
